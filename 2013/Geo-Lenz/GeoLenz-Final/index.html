@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>GeoLenz</title>
+        <meta name="description" content="Mission Possible - Energy GeoLenz">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <style>
+            #map-canvas { 
+                width:600px; 
+                height:490px;
+            }
+
+            div.header {
+                padding-bottom: 15px;
+            }
+
+            img.spcapiq {
+                float: left;
+            }
+
+            h2 {
+                color: white;
+            }
+
+            img {
+                max-width: none;
+            }
+            .layer-wizard-search-label { 
+                font-family: sans-serif;
+            }
+            body {
+
+                padding-bottom: 40px;
+                padding-left: 25px;
+                padding-right: 25px;
+                background-color: #141414;
+            }
+            .main-content{
+                position:absolute;
+            }
+            .form-well, .map-well, .card-well{
+                display: inline-block;
+                vertical-align: top;
+            }
+            .form-well {
+                width: 370px;
+            }
+            .map-well {
+                width: 600px;
+            }
+            .card-well {
+                width: 325px;
+            }
+        </style>
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript">
+            var map;
+            var layer_0;
+            var allData = [];
+
+            function initialize() {
+                $("#result_count").html("");
+
+                map = new google.maps.Map(document.getElementById('map-canvas'), {
+                    center: new google.maps.LatLng(37.41374676, -121.4118816),
+                    zoom: 6
+                });
+
+                var style = [{
+                    featureType: 'all',
+                    elementType: 'all',
+                    stylers: [{
+                        saturation: -55
+                    }]
+                }, {
+                    featureType: 'road.highway',
+                    elementType: 'all',
+                    stylers: [{
+                        visibility: 'off'
+                    }]
+                }];
+
+
+                var styledMapType = new google.maps.StyledMapType(style, {
+                    map: map,
+                    name: 'Styled Map'
+                });
+
+
+                map.mapTypes.set('map-style', styledMapType);
+                map.setMapTypeId('map-style');
+
+                var layer1 = new google.maps.FusionTablesLayer({
+                    query: {
+                        select: "col15",
+                        from: "1Cl6UWaNwN078Amqxt69c3iXztBXCQ2yUdlFQnr8",
+                    },
+                    map: map,
+                });
+
+                layer_0 = new google.maps.FusionTablesLayer({
+                    query: {
+                        select: "'longitude'",
+                        from: "1zIA9k6acAtuyKZ--oIr2paxTEi_bT1xocc6t-sg"
+                    },
+                    map: map,
+                    styleId: 2,
+                    templateId: 2
+                });
+
+                /*
+                google.maps.event.addListener(layer_0, 'click', function(e) {
+                        windowControl(e, infoWindow, map);
+                        alert("test");
+                });
+              */
+            }
+
+            function changeMap_0() {
+                var whereClause;
+                var searchString = document.getElementById('search-string_1').value.replace(/'/g, "\\'");
+                if (searchString != '--Select--') {
+                    whereClause = "'operator_name' = '" + searchString + "'";
+                }
+                layer_0.setOptions({
+                    query: {
+                        select: "'longitude'",
+                        from: "1zIA9k6acAtuyKZ--oIr2paxTEi_bT1xocc6t-sg",
+                        where: whereClause
+                    }
+                });
+            }
+
+            function changeMap_01() {
+                var whereClause;
+                var searchString = document.getElementById('search-string_0').value.replace(/'/g, "\\'");
+                if (searchString != '--Select--') {
+                    whereClause = "'county' = '" + searchString + "'";
+                }
+                layer_0.setOptions({
+                    query: {
+                        select: "'longitude'",
+                        from: "1zIA9k6acAtuyKZ--oIr2paxTEi_bT1xocc6t-sg",
+                        where: whereClause
+                    }
+                });
+                $('#collapseTwo').collapse({
+                    show: true
+                })
+
+                $('#collapseOne').collapse({
+                    show: false
+                })
+            }
+
+            function changeMap_02() {
+                var whereClause;
+                var searchString = document.getElementById('search-string_2').value.replace(/'/g, "\\'");
+                if (searchString != '--Select--') {
+                    whereClause = "'parent' = '" + searchString + "'";
+                }
+                layer_0.setOptions({
+                    query: {
+                        select: "'longitude'",
+                        from: "1zIA9k6acAtuyKZ--oIr2paxTEi_bT1xocc6t-sg",
+                        where: whereClause
+                    }
+                });
+            }
+
+            function changeMap_03() {
+                var whereClause;
+                var searchString = document.getElementById('search-string_3').value.replace(/'/g, "\\'");
+                if (searchString != '--Select--') {
+                    whereClause = "'status' = '" + searchString + "'";
+                }
+                layer_0.setOptions({
+                    query: {
+                        select: "'longitude'",
+                        from: "1zIA9k6acAtuyKZ--oIr2paxTEi_bT1xocc6t-sg",
+                        where: whereClause
+                    }
+                });
+            }
+
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+
+            $(document).ready(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "data2.csv",
+                    dataType: "text",
+                    success: function (data) {
+                        allData = processData(data);
+                        fillCounties(allData);
+                        fillParents(allData);
+                    }
+                });
+            });
+
+            function processData(allText) {
+                var record_num = 16; // or however many elements there are in each row
+                var allTextLines = allText.split(/\r\n|\n/);
+                var entries = allTextLines[0].split(',');
+                var lines = [];
+
+                for (i = 1; i < allTextLines.length; ++i) {
+
+                    lines.push(allTextLines[i].split(','));
+
+                }
+                return lines;
+            }
+
+            var countyIdx = 14;
+            var oilIndex = 2;
+            var gasIndex = 3;
+            var statusIdx = 10;
+            var parentIdx = 11;
+            var oprIdx = 6;
+
+            function fillParents(allData) {
+
+                var parentsDiv = document.getElementById("dynamicDivParent");
+
+                // create map of counties
+                var str = "<center>";
+                var arrCty = [];
+                for (var i = 0; i < allData.length; ++i) {
+
+                    var val = allData[i][parentIdx];
+
+                    if (val && !arrCty[val]) {
+                        var arr = [];
+                        // allData has all the data
+                        for (var k = 0; k < allData.length; ++k) {
+
+                            if (allData[k][parentIdx] == val) {
+                                if (!arr[allData[k][oprIdx]]) {
+                                    arr[allData[k][oprIdx]] = 1;
+                                }
+                            }
+                        }
+                        str += "<br><b>" + val + "</b>";
+                        // console.log(arr);    
+                        for (var key in arr) {
+                            str += "<br> " + key;
+                        }
+                        str += "<br>";
+                        arrCty[val] = 1;
+                    }
+                }
+                str += "</center>";
+                parentsDiv.innerHTML = str;
+            }
+
+            function fillCounties(allData) {
+
+                var countyDiv = document.getElementById("dynamicDivCounty");
+                var arr = [];
+
+                // create map of counties
+                var str = "<table><thead><tr><th>County</th><th>Oil</th><th>Gas</th><th>Act</th><th>Inact</th></thead><tbody>";
+                var arrCty = [];
+
+                for (var i = 0; i < allData.length; ++i) {
+
+                    var val = allData[i][countyIdx];
+
+                    if (val && !arrCty[val]) {
+                        var countOil = 0;
+                        var countGas = 0;
+                        var countActive = 0;
+                        var countInactive = 0;
+
+                        // allData has all the data
+                        for (var k = 0; k < allData.length; ++k) {
+                            if (allData[k][countyIdx] == val) {
+
+                                if (allData[k][oilIndex] > 0)++countOil;
+                                if (allData[k][gasIndex] > 0)++countGas;
+                                if (allData[k][statusIdx] == 'A')++countActive;
+                                if (allData[k][statusIdx] == 'I')++countInactive;
+                            }
+                        }
+                        str += "<tr><td><center><b>" + val + "</b></center></td>" +
+                            "<td><center>" + (countOil) + "</center></td>" +
+                            "<td><center>" + (countGas) + "</center></td>" +
+                            "<td><center>" + (countActive) + "</center></td>" +
+                            "<td><center>" + (countInactive) + "</center></td>";
+                        arrCty[val] = 1;
+                    }
+                }
+                str += "</tbody></table>"
+                countyDiv.innerHTML = str;
+            }
+
+            function fillCards(val, index1, index2) {
+                if (!val || val == "--Select--") {
+                    fillCounties(allData);
+                    fillParents(allData);
+                    return;
+                }
+
+                var countyDiv = document.getElementById("dynamicDivCounty");
+                var parentsDiv = document.getElementById("dynamicDivParent");
+
+                if (!index2) {
+                    if (index1 == countyIdx) {
+                        // countyDiv.innerHTML = "<b>County:&nbsp;</b>" + val + "<br> <b>Oil: </b>" + arr[i]  ;
+                        var arr = [];
+                        var parents = [];
+                        var countOil = 0;
+                        var countGas = 0;
+                        var countActive = 0;
+                        var countInactive = 0;
+                        var str = "<center>";
+
+                        // allData has all the data
+                        for (var i = 0; i < allData.length; ++i) {
+
+                            if (allData[i][countyIdx] == val) {
+
+                                if (allData[i][oilIndex] > 0)++countOil;
+                                if (allData[i][gasIndex] > 0)++countGas;
+                                if (allData[i][statusIdx] == 'A')++countActive;
+                                if (allData[i][statusIdx] == 'I')++countInactive;
+
+                                if (!parents[allData[i][parentIdx]]) {
+                                    parents[allData[i][parentIdx]] = [];
+                                }
+                                parents[allData[i][parentIdx]][allData[i][oprIdx]] = 1;
+                            }
+                        }
+                        for (var key1 in parents) {
+                            str += "<br><b>" + key1 + "</b><br>";
+                            for (var key2 in parents[key1]) {
+                                str += key2 + "<br>";
+                            }
+                        }
+                        countyDiv.innerHTML = "<table>" +
+                            "<tr><td><b>County:</b></td><td>" + val + "</td></tr>" +
+                            "<tr><td><b>Oil: </b> </td><td>" + (countOil <= 0 ? "None" : countOil) + "</td></tr>" +
+                            "<tr><td><b>Gas: </b> </td><td>" + (countGas <= 0 ? "None" : countGas) + "</td></tr>" +
+                            "<tr><td><b>Active:</b></td><td>" + (countActive <= 0 ? "None" : countActive) + "</td></tr>" +
+                            "<tr><td><b>Inactive:</b></td><td>" + (countInactive <= 0 ? "None" : countInactive) + "</td></tr>" +
+                            "</table>";
+                        parentsDiv.innerHTML = str;
+                    }
+                } else {
+
+                    // write code for 2 indices
+                }
+            }
+        </script>
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="header">
+            <img class="spcapiq" src="img/capiqlogo.png">
+            <h2 class="text-center">Energy GeoLenz</h2>
+        </div>    
+
+        <div class="main-content">
+            <div class="form-well">
+                <div class="well">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <!-- Form Name -->
+                            <legend>Filters</legend>
+                            <!-- Text input-->
+                            <div class="control-group">
+                                <label class="control-label" for="textinput">State:</label>
+                                <div class="controls">
+                                    <select id="selectbasic" name="selectbasic" class="input-medium">
+                                        <option>California</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Select Multiple -->
+                            <div class="control-group">
+                                <label class="control-label" for="selectmultiple">County:</label>
+                                <div class="controls">
+                                    <select id="search-string_0" onchange="changeMap_01(this.value);fillCards(this.value , 14);" name="selectbasic" class="input-medium">
+                                        <option value="--Select--">--Select--</option>
+                                        <option value="Fresno">Fresno</option>
+                                        <option value="Kings">Kings</option>
+                                        <option value="Colusa">Colusa</option>
+                                        <option value="Sutter">Sutter</option>
+                                        <option value="Santa Barbara">Santa Barbara</option>
+                                        <option value="Tehama">Tehama</option>
+                                        <option value="Glenn">Glenn</option>
+                                        <option value="Madera">Madera</option>
+                                        <option value="San Bernardino">San Bernardino</option>
+                                        <option value="Kern">Kern</option>
+                                        <option value="Alameda">Alameda</option>
+                                        <option value="Solnao">Solnao</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Select Basic -->
+                            <div class="control-group">
+                                <label class="control-label" for="selectbasic">Asset:</label>
+                                <div class="controls">
+                                    <select id="selectbasic" name="selectbasic" class="input-medium" onchange="fillCards(this.value , 2,3);">
+                                        <option value="--Select--">--Select--</option>
+                                        <option>Oil</option>
+                                        <option>Gas</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Select Basic -->
+                            <div class="control-group">
+                                <label class="control-label" for="selectbasic">Parent:</label>
+                                <div class="controls">
+                                    <select id="search-string_2" onchange="changeMap_02(this.value);fillCards(this.value , 11);" name="selectbasic" class="input-medium">
+                                        <option value="--Select--">--Select--</option>
+                                        <option value="CHEVRONTEXACO CORP">CHEVRONTEXACO CORP</option>
+                                        <option value="\N">\N</option>
+                                        <option value="EXXON MOBIL CORP">EXXON MOBIL CORP</option>
+                                        <option value="Venoco Inc">Venoco Inc</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Select Multiple -->
+                            <div class="control-group">
+                                <label class="control-label" for="selectmultiple">Operator Name:</label>
+                                <div class="controls">
+                                    <select id="search-string_1" name="selectbasic" class="input-medium" onchange="changeMap_0(this.value);fillCards(this.value , 6);">
+                                        <option value="--Select--">--Select--</option>
+                                        <option value="Chevron U.S.A. Inc.">Chevron U.S.A. Inc.</option>
+                                        <option value="Aera Energy LLC">Aera Energy LLC</option>
+                                        <option value="Venoco Inc.">Venoco Inc.</option>
+                                        <option value="INNEX California, Inc.">INNEX California, Inc.</option>
+                                        <option value="Holmes Western Oil Corp.">Holmes Western Oil Corp.</option>
+                                        <option value="Compass Global Res., LLC.">Compass Global Res., LLC.</option>
+                                        <option value="Santa Maria Energy, LLC">Santa Maria Energy, LLC</option>
+                                        <option value="MetGas Ind. (USA) Ltd.">MetGas Ind. (USA) Ltd.</option>
+                                        <option value="Greka Oil & Gas, Inc.">Greka Oil & Gas, Inc.</option>
+                                        <option value="U. S. Geological Survey">U. S. Geological Survey</option>
+                                        <option value="Medley Oil and Gas, LLC">Medley Oil and Gas, LLC</option>
+                                        <option value="Sullivan Drilling Inc.">Sullivan Drilling Inc.</option>
+                                        <option value="Bob Ferguson Independent">Bob Ferguson Independent</option>
+                                        <option value="E & B Natural Res. Mgmt. Corp.">E & B Natural Res. Mgmt. Corp.</option>
+                                        <option value="Towne Exploration Co.">Towne Exploration Co.</option>
+                                        <option value="ABA Energy Corp.">ABA Energy Corp.</option>
+                                        <option value="Lodi Gas Storage, LLC.">Lodi Gas Storage, LLC.</option>
+                                        <option value="Foothill Energy LLC">Foothill Energy LLC</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Select Basic -->
+                            <div class="control-group">
+                                <label class="control-label" for="selectbasic">Status:</label>
+                                <div class="controls">
+                                    <select  id="search-string_3" onchange="changeMap_03(this.value);fillCards(this.value , 10);" name="selectbasic" class="input-medium">
+                                        <option value="--Select--">--Select--</option>
+                                        <option value="A">Active</option>
+                                        <option value="I">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Select Basic -->
+                            <div class="control-group">
+                                <label class="control-label" for="selectbasic">Production Capacity:</label>
+                                <div class="controls">
+                                    <select id="selectbasic" name="selectbasic" class="input-medium" onchange="fillCards(this.value , 2,3);">
+                                        <option>--Select--</option>
+                                        <option>0</option>
+                                        <option>1-160</option>
+                                        <option>161-370</option>
+                                        <option>371-900</option>
+                                        <option>900+</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="map-well">
+                <div id="map-canvas"></div>
+            </div>
+            <div class="card-well">
+                <div class="well">
+                    <br>
+                    <legend>Summary</legend>
+
+                    <div class="accordion" id="accordion2">
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                                State
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="accordion-body collapse in">
+                                <div class="accordion-inner">
+                                    <p>
+                                    <h5 class="text-center">California</h5>
+                                    <b>Oil Wells: </b>(1339 Active, 636 Inactive)
+                                    <br>
+                                    <b>Gas Wells: </b>(1205 Active, 632 Inactive)
+                                    <br>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                                Counties
+                                </a>
+                            </div>
+                            <div id="collapseTwo" class="accordion-body collapse">
+                                <div class="accordion-inner" id="dynamicDivCounty">
+
+
+<!--
+
+                                    <p>
+                                        <b>1. Alameda</b>
+                                        <br>
+                                        8 Oil Assets (7 Active, 1 Inactive)
+                                        <br>
+                                        2 Gas Assets (2 Active, 0 Inactive)
+                                        <br>
+                                        Annual Production Volume: 
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        <b>2. Fresno</b>
+                                        <br>
+                                        8 Oil Assets (7 Active, 1 Inactive)
+                                        <br>
+                                        2 Gas Assets (2 Active, 0 Inactive)
+                                        <br>
+                                        Annual Production Volume: 
+                                    </p>
+
+-->
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
+                                    Parent Companies
+                                </a>
+                            </div>
+                            <div id="collapseThree" class="accordion-body collapse">
+                                <div class="accordion-inner" id="dynamicDivParent">
+<!--                                     <p>
+                                        <b>1. Bellaire</b>
+                                        <br>
+                                        8 Oil Assets (7 Active, 1 Inactive)
+                                        <br>
+                                        2 Gas Assets (2 Active, 0 Inactive)
+                                        <br>
+                                        Annual Production Volume:
+                                        <br>
+                                        Operators: 1. E & B Natural Res. Mgmt. Corp. <br>
+                                        2. E.C. 15-29
+                                    </p> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
